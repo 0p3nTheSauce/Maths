@@ -63,33 +63,33 @@ def low_rank_approx():
   end = time.perf_counter()
   print(f"Time taken for X @ A @ B: {end - start:.6f} seconds")
   
-def sum_vectors(a_vectors, b_vectors):
-  if len(a_vectors) != len(b_vectors):
+def sum_vectors(q_vectors, k_vectors):
+  if len(q_vectors) != len(k_vectors):
     raise ValueError("must have same number of vectors in a and b")
   acc = 0
-  for i in range(len(a_vectors)):
-    acc += np.dot(a_vectors[i], b_vectors[i])
+  for i in range(len(q_vectors)):
+    acc += np.dot(q_vectors[i], k_vectors[i])
   print(f"sum of vector pair dot products: {acc}")
 
-  total = np.sum(a_vectors * b_vectors)  # element-wise multiply, then sum
+  total = np.sum(q_vectors * k_vectors)  # element-wise multiply, then sum
   #timing not really fair because pure python vs numpy
   print(f"sum of vector pair dot products: {total}")  
   
   
-def dot_products_vectors(a_vectors,b_vectors):
+def dot_products_vectors(q_vectors,k_vectors):
   '''This function shows that if we have a sequenc of vectors a0 -> ai, 
   and a sequence of vectors b0 -> bi, and we want to compute the dot product 
   between every pair of vectors from both sequences, we can do so efficiently by 
   stacking the vectors, and performing the dot product of matrices A and the transpose of B.'''
-  if len(a_vectors) != len(b_vectors):
+  if len(q_vectors) != len(k_vectors):
     raise ValueError("must have same number of vectors in a and b")
-  vector_dot_matrix = np.ones_like(a_vectors)
-  for i in range(len(a_vectors)):
-    for j in range(len(b_vectors)):
-      vector_dot_matrix[i,j] = np.dot(a_vectors[i], b_vectors[j])
+  vector_dot_matrix = np.ones_like(q_vectors)
+  for i in range(len(q_vectors)):
+    for j in range(len(k_vectors)):
+      vector_dot_matrix[i,j] = np.dot(q_vectors[i], k_vectors[j])
   vector_dot_matrix = np.array(vector_dot_matrix)
   print(vector_dot_matrix)
-  stacked_dot_matrix = a_vectors @ b_vectors.T
+  stacked_dot_matrix = q_vectors @ k_vectors.T
   print(stacked_dot_matrix)
   
 def my_softmax(vec):
@@ -156,14 +156,47 @@ def attention_pattern():
   plt.ylabel("Query vectors")
   plt.show()
   
-def main():
-  A = np.array([[1, 2],
-              [3, 4]])
+  
 
-  B = np.array([[5, 6],
-                [7, 8]])
+def weighted_sum_man(e_vectors, v_vectors, weights):
+  new_e_vectors = []
+  for row, e_vec in enumerate(e_vectors):
+    weighted_sum = np.array([0]*len(e_vec), dtype=np.float64)
+    #compute weigthed sum of the value vectors
+    for col, v_vec in enumerate(v_vectors):
+      weighted_sum += weights[row][col] * v_vec
+    new_e_vectors.append(weighted_sum+e_vec)
+  return np.array(new_e_vectors)
+
+def weighted_sum_mat(e_vectors, v_vectors, weights):
+  return e_vectors + (weights @ v_vectors)
+
+def test_weighted_sum():
+  Q = np.random.rand(7,7) #query matrix
+  K = np.random.rand(7,7) #key matrix
+  d = Q.shape[1] #dimension of vector
+  attention_weights = softmax(Q @ K.T / np.sqrt(d)) #scaled dot product 
+  V = np.random.rand(7,10) #value matrix
+  E = np.random.rand(7,10) #embedding matrix
+  man = weighted_sum_man(E, V, attention_weights)
+  mat = weighted_sum_mat(E, V, attention_weights)
+  if np.allclose(man, mat):
+    print("Pass")
+  else:
+    print("Fail")
+
+  
+    
+
+def main():
+  # A = np.array([[1, 2],
+  #             [3, 4]])
+
+  # B = np.array([[5, 6],
+  #               [7, 8]])
   # sum_vectors(A, B)  
-  attention_pattern()
+  # attention_pattern()
+  test_weighted_sum()
   # test_softmaxes()
   #dot_products_vectors(A, B)
   
