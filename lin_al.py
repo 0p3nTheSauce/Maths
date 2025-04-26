@@ -156,7 +156,71 @@ def attention_pattern():
   plt.ylabel("Query vectors")
   plt.show()
   
-  
+def test_shapes():
+  A = np.random.rand(2,3) #A projects v to a lower dimension: 3D -> 2D
+  B = np.random.rand(3,2) #B projects the output of A @ v, back to a higher dimension (the shape of b is the inverse of A): 2D -> 3D
+  C = np.random.rand(3,3) #C has no effect on the dimesnions of v (because C is square)
+  v = np.random.rand(3,)
+
+  print("A")
+  print(A)
+  print(f'shape: {A.shape}')
+  print()
+  print("B")
+  print(B)
+  print(f'shape: {B.shape}')
+  print()
+  print("C")
+  print(C)
+  print(f'shape: {C.shape}')
+  print()
+  print("v")
+  print(v)
+  print(f'shape: {v.shape}')
+  print()
+  print("D = A @ v")
+  D = A @ v
+  print(D)
+  print(f'shape: {D.shape}')
+  print()
+  print("E = B @ D")
+  E = B @ D
+  print(E)
+  print(f'shape: {E.shape}')
+  print()
+  # print(B @ v) won't work, incorrect dimensions
+  print("F = B @ v won't work because of incorrect dimensions")
+  print(f"shape of B: {B.shape}, shape of v: {v.shape}")
+  print()
+  print("G = C @ v")
+  G = C @ v
+  print(G)
+  print(f'shape: {G.shape}')
+
+def claude_shapes():
+  A = np.random.rand(2,3) #A projects v to a lower dimension: 3D -> 2D
+  B = np.random.rand(3,2) #B projects the output of A @ v, back to a higher dimension (the shape of b is the inverse of A): 2D -> 3D
+  C = np.random.rand(3,3) #C has no effect on the dimesnions of v (because C is square)
+  v = np.random.rand(3,) #v is a 3D vector
+
+  # Demonstrate matrix operations
+  print(f"A: {A.shape}\n{A}\n")
+  print(f"B: {B.shape}\n{B}\n")
+  print(f"C: {C.shape}\n{C}\n")
+  print(f"v: {v.shape}\n{v}\n")
+
+  # Matrix-vector multiplications
+  D = A @ v
+  print(f"D = A @ v: {D.shape}\n{D}\n")
+
+  E = B @ D
+  print(f"E = B @ D: {E.shape}\n{E}\n")
+
+  # Dimension mismatch example
+  print(f"B @ v won't work: B shape {B.shape}, v shape {v.shape}\n")
+
+  G = C @ v
+  print(f"G = C @ v: {G.shape}\n{G}")
 
 def weighted_sum_man(e_vectors, v_vectors, weights):
   new_e_vectors = []
@@ -185,9 +249,25 @@ def test_weighted_sum():
   else:
     print("Fail")
 
+def linear_projection():
+  dmodel = 10
+  dk = 7
+  n = 15
+  e_vectors = np.random.rand(n, 10)
+  weight_mat = np.random.rand(dmodel,dk)
+  manual_k_vectors = []
+  #manual way first 
+  for ei in e_vectors:
+    ki = ei @ weight_mat 
+    manual_k_vectors.append(ki)
+  manual_k_vectors = np.array(manual_k_vectors)
+  #single matrix operation
+  mat_k_vectors = e_vectors @  weight_mat
+  print("Pass" 
+    if np.allclose(manual_k_vectors, mat_k_vectors)
+    else "Fail")
   
-    
-
+  
 def main():
   # A = np.array([[1, 2],
   #             [3, 4]])
@@ -196,8 +276,14 @@ def main():
   #               [7, 8]])
   # sum_vectors(A, B)  
   # attention_pattern()
-  test_weighted_sum()
+  # test_weighted_sum()
+  # linear_projection()
   # test_softmaxes()
+  test_shapes()
+  print()
+  print("############################################################################")
+  print()
+  claude_shapes()
   #dot_products_vectors(A, B)
   
 if __name__  == "__main__":
