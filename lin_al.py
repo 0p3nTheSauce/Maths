@@ -238,15 +238,14 @@ def main():
   # B = np.array([[5, 6],
   #               [7, 8]])
   # sum_vectors(A, B)  
-  # attention_pattern()
+  attention_pattern()
   # test_weighted_sum()
   # linear_projection()
   # test_softmaxes()
-  test_shapes()
+  # test_shapes()
   print()
   print("############################################################################")
   print()
-  claude_shapes()
   #dot_products_vectors(A, B)
   
 if __name__  == "__main__":
