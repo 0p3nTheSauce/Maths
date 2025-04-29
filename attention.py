@@ -4,18 +4,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-def disp_matrix(mat, title, xlabel, ylabel):
+def disp_matrix(mat, title, xlabel, ylabel, xticks=True):
   """
   Display a matrix using seaborn heatmap
   """
   plt.figure(figsize=(10, 8))
-  sns.heatmap(mat, annot=True, fmt=".2f", cmap="YlGnBu")
+  if xticks:
+    sns.heatmap(mat, annot=True, fmt=".2f", cmap="YlGnBu")
+  else:
+    sns.heatmap(mat, annot=True, fmt=".2f", cmap="YlGnBu", xticklabels=[])
   plt.title(title)
   plt.xlabel(xlabel)
   plt.ylabel(ylabel)
   
-
-
 def attention(Q, K, V):
   """
   Q: query matrix
@@ -39,31 +40,18 @@ def main():
   Q = E @ W_Q #query matrix
   K = E @ W_K #key matrix
   V = E @ W_V #value matrix
+  disp_matrix(E, "Embedding Matrix", "Embedding", "i", xticks=False)
   disp_matrix(Q, "Query Matrix", "Query", "i")
   disp_matrix(K, "Key Matrix", "Key", "i")
   disp_matrix(V, "Value Matrix", "Value", "i")
-  output = attention(Q, K, V)
-  plt.figure(figsize=(10, 8))
-  sns.heatmap(E, annot=True, fmt=".2f", cmap="YlGnBu", xticklabels=[])
-  plt.title("Embedding Matrix")
-  plt.xlabel("Embedding")
-  plt.ylabel("i")
-  plt.show()
   
-  plt.figure(figsize=(10, 8))
-  sns.heatmap(output, annot=True, fmt=".2f", cmap="YlGnBu", xticklabels=[])
-  plt.title("Output Matrix")
-  plt.xlabel("Output")
-  plt.ylabel("i")
-  plt.show()
+  output = attention(Q, K, V)
+  
+  disp_matrix(output, "Output of attention", "Output", "i", xticks=False)
   
   E_updated = E + output
-  plt.figure(figsize=(10, 8))
-  sns.heatmap(E_updated, annot=True, fmt=".2f", cmap="YlGnBu", xticklabels=[])
-  plt.title("Updated Embedding Matrix")
-  plt.xlabel("Embedding")
-  plt.ylabel("i")
-  plt.show()
+  
+  disp_matrix(E_updated, "Updated Embedding Matrix", "Updated Embedding", "i", xticks=False)
   
   
   
