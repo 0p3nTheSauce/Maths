@@ -185,6 +185,64 @@ def test_weighted_sum():
   else:
     print("Fail")
 
+def mat_by_vec():
+  '''shows effect on dimensions when multipling a non-square matrix by a vector'''
+  A = np.array([[1, 2, 3],
+                [4, 5, 6]])
+  B = np.array([[7, 8],
+                [9, 10],
+                [11, 12]])
+  C = np.array([[13, 14, 15],
+                [15, 16, 17],
+                [17, 18, 19]])
+  v = np.array([1, 2, 3])
+  
+  print("A")
+  print(A)
+  print(f'shape: {A.shape}')
+  print()
+  print("B")
+  print(B)
+  print(f'shape: {B.shape}')
+  print()
+  print("C")
+  print(C)
+  print(f'shape: {C.shape}')
+  print()
+  print("v")
+  print(v)
+  print(f'shape: {v.shape}')
+  print()
+  print("D = A @ v")
+  D = A @ v
+  print(D)
+  print(f'shape: {D.shape}')
+  print()
+  print("E = B @ D")
+  E = B @ D
+  print(E)
+  print(f'shape: {E.shape}')
+  print()
+  # print(B @ v) won't work, incorrect dimensions
+  print("F = B @ v won't work because of incorrect dimensions")
+  print(f"shape of B: {B.shape}, shape of v: {v.shape}")
+  print()
+  print("G = C @ v")
+  G = C @ v
+  print(G)
+  print(f'shape: {G.shape}')
+
+def stacked_vec_by_mat():
+  e = np.random.rand(7,) 
+  E = np.stack([e for _ in range(7)]) #embedding matrix
+  Wq = np.random.rand(7,7) #query matrix
+  Q_man = np.stack([e @ Wq for _ in range(7)]) #query matrix   (The order is not what I would have expected)
+  Q_mat = E @ Wq #query matrix
+  if np.allclose(Q_man, Q_mat):
+    print("Pass")
+  else: 
+    print("Fail")
+    
 def main():
   # A = np.array([[1, 2],
   #             [3, 4]])
@@ -193,7 +251,9 @@ def main():
   #               [7, 8]])
   # sum_vectors(A, B)  
   # attention_pattern()
-  test_weighted_sum()
+  # test_weighted_sum()
+  # mat_by_vec()
+  stacked_vec_by_mat()
   # test_softmaxes()
   #dot_products_vectors(A, B)
   
