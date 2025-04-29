@@ -233,50 +233,30 @@ def linear_projection():
   
 def mat_by_vec():
   '''shows effect on dimensions when multipling a non-square matrix by a vector'''
-  A = np.array([[1, 2, 3],
-                [4, 5, 6]])
-  B = np.array([[7, 8],
-                [9, 10],
-                [11, 12]])
-  C = np.array([[13, 14, 15],
-                [15, 16, 17],
-                [17, 18, 19]])
-  v = np.array([1, 2, 3])
-  
-  print("A")
-  print(A)
-  print(f'shape: {A.shape}')
-  print()
-  print("B")
-  print(B)
-  print(f'shape: {B.shape}')
-  print()
-  print("C")
-  print(C)
-  print(f'shape: {C.shape}')
-  print()
-  print("v")
-  print(v)
-  print(f'shape: {v.shape}')
-  print()
-  print("D = A @ v")
+  # Create random matrices and vector
+  A = np.random.rand(2,3)  # Projects 3D -> 2D
+  B = np.random.rand(3,2)  # Projects 2D -> 3D
+  C = np.random.rand(3,3)  # Square matrix (preserves dimensions)
+  v = np.random.rand(3,)   # 3D vector
+
+  # Demonstrate matrix operations
+  print(f"A: {A.shape}\n{A}\n")
+  print(f"B: {B.shape}\n{B}\n")
+  print(f"C: {C.shape}\n{C}\n")
+  print(f"v: {v.shape}\n{v}\n")
+
+  # Matrix-vector multiplications
   D = A @ v
-  print(D)
-  print(f'shape: {D.shape}')
-  print()
-  print("E = B @ D")
+  print(f"D = A @ v: {D.shape}\n{D}\n")
+
   E = B @ D
-  print(E)
-  print(f'shape: {E.shape}')
-  print()
-  # print(B @ v) won't work, incorrect dimensions
-  print("F = B @ v won't work because of incorrect dimensions")
-  print(f"shape of B: {B.shape}, shape of v: {v.shape}")
-  print()
-  print("G = C @ v")
+  print(f"E = B @ D: {E.shape}\n{E}\n")
+
+  # Dimension mismatch example
+  print(f"B @ v won't work: B shape {B.shape}, v shape {v.shape}\n")
+
   G = C @ v
-  print(G)
-  print(f'shape: {G.shape}')
+  print(f"G = C @ v: {G.shape}\n{G}")
 
 def stacked_vec_by_mat():
   e = np.random.rand(7,) 
