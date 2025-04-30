@@ -17,18 +17,29 @@ def disp_matrix(mat, title, xlabel, ylabel, xticks=True):
   plt.xlabel(xlabel)
   plt.ylabel(ylabel)
   
-def attention(Q, K, V):
+def attention(Q, K, V, mask=None):
   """
   Q: query matrix
   K: key matrix
   V: value matrix
   """
   d = Q.shape[1] #dimension of vector
-  attention_weights = softmax(Q @ K.T / np.sqrt(d)) #scaled dot product 
+  attention_scores = Q @ K.T / np.sqrt(d) #scaled dot product
+  if mask is not None:
+    attention_scores = np.where(mask == 1, -np.inf, attention_scores)
+    # disp_matrix(attention_scores, "Masked Attention Scores", "Key", "Query")
+  attention_weights = softmax(attention_scores) #softmax to get attention weights 
   disp_matrix(attention_weights, "Attention Weights", "Key", "Query")
   weighted_sum = attention_weights @ V #weighted sum of value vectors
   return weighted_sum
-  
+
+def causal_mask(n):
+  """
+  Create a causal mask for the attention mechanism
+  n: size of the mask
+  """
+  return np.triu(np.ones((n, n)), k=1)
+
 def main():
   dmodel = 10
   dk = dv = dmodel
@@ -45,14 +56,15 @@ def main():
   disp_matrix(K, "Key Matrix", "Key", "i")
   disp_matrix(V, "Value Matrix", "Value", "i")
   
-  output = attention(Q, K, V)
+  mask = causal_mask(n)
+  output = attention(Q, K, V, mask)
   
   disp_matrix(output, "Output of attention", "Output", "i", xticks=False)
   
   E_updated = E + output
   
   disp_matrix(E_updated, "Updated Embedding Matrix", "Updated Embedding", "i", xticks=False)
-  
+  plt.show()
   
   
   
